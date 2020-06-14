@@ -1,0 +1,21 @@
+{
+  "name": "newman-reporter-slack",
+  "version": "1.0.0",
+  "description": "newman report to slack",
+  "main": "index.ts",
+  "scripts": {
+    "lint": "eslint index/js",
+    "pack": "rm newman-reporter-slack-1.0.0.tgz && npm pack && npm install -g newman-reporter-slack-1.0.0.tgz"
+  },
+  "author": "Jack Chaw",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^14.0.13",
+    "axios": "^0.19.2",
+    "eslint": "^7.2.0",
+    "jsonminify": "^0.4.1",
+    "pretty-ms": "^7.0.0",
+    "typescript": "^3.9.5"
+  },
+  "devDependencies": {}
+}
