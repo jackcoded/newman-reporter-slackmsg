@@ -4,7 +4,20 @@ var jsonminify = require("jsonminify");
 
 function slackMessage(stats, timings, failures) {
     let parsedFailures = parseFailures(failures);
-    // console.log(failMessage(parsedFailures));
+    let failureMessage = `
+    "attachments": [
+        {
+            "mrkdwn_in": ["text"],
+            "color": "#FF0000",
+            "author_name": "NWS DR Smoke Tests",
+            "title": ":fire: Failures :fire:",
+            "fields": [
+                ${failMessage(parsedFailures)}
+            ],
+            "footer": "Slack API",
+            "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+        }
+    ]`
     return jsonminify(`
     {
         "blocks": [{
@@ -53,8 +66,9 @@ function slackMessage(stats, timings, failures) {
                     },
                 ],
             },
-            ${failMessage(parsedFailures)}
-        ]}`);
+        ],
+        ${failures.length > 0 ? failureMessage : '' }
+       }`);
 }
 
 
@@ -64,22 +78,25 @@ function parseFailures(failures) {
             acc.push({
                 name: failure.source.name || undefined,
                 tests: [{
-                    name: failure.error.test || 'connection error',
-                    error: failure.error.message
+                    name: failure.error.name || 'unknown',
+                    test: failure.error.test || 'connection error',
+                    message: failure.error.message
                 }]
             });
         } else if (acc[acc.length - 1].name !== failure.source.name) {
             acc.push({
                 name: failure.source.name,
                 tests: [{
-                    name: failure.error.test,
-                    error: failure.error.message
+                    name: failure.error.name,
+                    test: failure.error.test,
+                    message: failure.error.message
                 }]
             });
         } else {
             acc[acc.length - 1].tests.push({
-                name: failure.error.test,
-                error: failure.error.message
+                name: failure.error.name,
+                test: failure.error.test,
+                message: failure.error.message
             })
         }
         return acc;
@@ -87,13 +104,30 @@ function parseFailures(failures) {
 }
 
 function failMessage(parsedFailures) {
-   return parsedFailures.reduce((acc, failure) => {
-        acc = acc + `{"type":"divider"},{"type":"section","text":{"type":"mrkdwn","text":":fire: ${failure.name} :fire:"}},{"type":"divider"},`
+    return parsedFailures.reduce((acc, failure) => {
+        acc = acc + `
+        {
+            "title": "${failure.name}",
+            "short": false
+        },
+        ${parseFailErrors(failure.tests)}`
         return acc;
-   }, '');
+    }, '');
 }
 
-async function send(slackHookUrl, message) {
+function parseFailErrors(parsedErrors) {
+    return parsedErrors.reduce((acc, error, index) => {
+        acc = acc + `
+        {
+            "value": "${index +1}. ${error.name} - ${error.test}",
+            "short": false
+        },`;
+        return acc;
+    }, '');
+
+}
+
+async function send(slackHookUrl, message, contentType) {
     const payload = {
         method: 'POST',
         url: slackHookUrl,

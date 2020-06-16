@@ -2,10 +2,10 @@ const prettyms = require('pretty-ms');
 const {
     slackMessage,
     send
-} = require('./slackmsg');
+} = require('./utils');
 
 function SlackNewmanReporter(emitter, reporterOptions, collectionRunOptions) {
-    const url = 'https://hooks.slack.com/services/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';
+    const webhookUrl = reporterOptions.webhookUrl;
     emitter.on('done', (error, summary) => {
         if (error) {
             console.log('error in done')
@@ -13,7 +13,7 @@ function SlackNewmanReporter(emitter, reporterOptions, collectionRunOptions) {
         }
 
         let run = summary.run;
-        send(url, slackMessage(run.stats, run.timings, run.failures));
+        send(webhookUrl, slackMessage(run.stats, run.timings, run.failures));
     });
 
 }
