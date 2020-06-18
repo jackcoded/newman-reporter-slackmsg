@@ -4,7 +4,9 @@ Custom [newman](https://github.com/postmanlabs/newman) reporter to send message 
 
 
 ### How to install 
- npm run i -g newman-reporter-slackmsg
+ ```npm run i -g newman-reporter-slackmsg
+ ```
 
 ### How to use
- newman run <collectionFile> -e <environmentFile> --suppress-exit-code -r slackmsg --reporter-slack-webhookurl '<webhookurl>'
+ ```newman run <collectionFile> -e <environmentFile> --suppress-exit-code -r slackmsg --reporter-slack-webhookurl '<webhookurl>'
+ ```
