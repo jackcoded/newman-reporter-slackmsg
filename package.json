@@ -1,13 +1,12 @@
 {
   "name": "newman-reporter-slackmsg",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "newman report to slack",
   "main": "index.ts",
   "scripts": {
     "lint": "eslint index/js",
     "pack": "rm newman-reporter-slack-1.0.0.tgz && npm pack && npm install -g newman-reporter-slack-1.0.0.tgz",
     "test": "jest --passWithNoTests"
-
   },
   "author": "Jack Chaw",
   "license": "ISC",
