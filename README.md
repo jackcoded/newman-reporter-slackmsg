@@ -1,6 +1,7 @@
 # newman-reporter-slackmsg
 
-Custom newman reporter for slack
+Custom [newman](https://github.com/postmanlabs/newman) reporter to send message to [slack](https://slack.com/)
+
 
 ### How to install 
  npm run i -g newman-reporter-slackmsg
