@@ -2,47 +2,52 @@ const prettyms = require('pretty-ms');
 const axios = require('axios').default;
 var jsonminify = require("jsonminify");
 
-function slackMessage(stats, timings, failures) {
+function slackMessage(stats, timings, failures, sha, env) {
     let parsedFailures = parseFailures(failures);
     let failureMessage = `
     "attachments": [
         {
             "mrkdwn_in": ["text"],
             "color": "#FF0000",
-            "author_name": "NWS DR Smoke Tests",
+            "author_name": "Newman Tests",
             "title": ":fire: Failures :fire:",
             "fields": [
                 ${failMessage(parsedFailures)}
             ],
-            "footer": "Slack API",
+            "footer": "Smoke Test",
+            "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+        }
+    ]`
+    let successMessage = `
+    "attachments": [
+        {
+            "mrkdwn_in": ["text"],
+            "color": "#008000",
+            "author_name": "Newman Tests",
+            "title": ":white_check_mark: All Passed :white_check_mark:",
+            "footer": "Smoke Test",
             "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
         }
     ]`
     return jsonminify(`
     {
-        "blocks": [{
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "*Newman Test Summary*"
-                }
-            },
+        "blocks": [
             {
                 "type": "divider"
             },
             {
                 "type": "section",
-                "fields": [{
-                        "type": "mrkdwn",
-                        "text": "Total Test:"
-                    },
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "*Test Summary*"
+                }
+            },
+            {
+                "type": "section",
+                "fields": [
                     {
                         "type": "mrkdwn",
-                        "text": "${stats.requests.total}"
-                    },
-                    {
-                        "type": "mrkdwn",
-                        "text": "Test passed:"
+                        "text": "Test Passed:"
                     },
                     {
                         "type": "mrkdwn",
@@ -50,7 +55,7 @@ function slackMessage(stats, timings, failures) {
                     },
                     {
                         "type": "mrkdwn",
-                        "text": "Test failed:"
+                        "text": "Test Failed:"
                     },
                     {
                         "type": "mrkdwn",
@@ -66,8 +71,11 @@ function slackMessage(stats, timings, failures) {
                     },
                 ],
             },
+            {
+                "type": "divider"
+            },
         ],
-        ${failures.length > 0 ? failureMessage : '' }
+        ${failures.length > 0 ? failureMessage : successMessage }
        }`);
 }
 
@@ -110,12 +118,12 @@ function failMessage(parsedFailures) {
             "title": "${failure.name}",
             "short": false
         },
-        ${parseFailErrors(failure.tests)}`
+        ${failErrors(failure.tests)}`
         return acc;
     }, '');
 }
 
-function parseFailErrors(parsedErrors) {
+function failErrors(parsedErrors) {
     return parsedErrors.reduce((acc, error, index) => {
         acc = acc + `
         {
