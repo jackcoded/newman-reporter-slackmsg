@@ -1,6 +1,6 @@
 {
   "name": "newman-reporter-slackmsg",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "newman report to slack",
   "main": "index.ts",
   "scripts": {
