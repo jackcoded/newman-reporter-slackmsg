@@ -84,9 +84,9 @@ function parseFailures(failures) {
     return failures.reduce((acc, failure, index) => {
         if (index === 0) {
             acc.push({
-                name: failure.source.name || undefined,
+                name: failure.source.name || 'No Name',
                 tests: [{
-                    name: failure.error.name || 'unknown',
+                    name: failure.error.name || 'No test name',
                     test: failure.error.test || 'connection error',
                     message: failure.error.message
                 }]
@@ -96,14 +96,14 @@ function parseFailures(failures) {
                 name: failure.source.name,
                 tests: [{
                     name: failure.error.name,
-                    test: failure.error.test,
+                    test: failure.error.test || 'connection error',
                     message: failure.error.message
                 }]
             });
         } else {
             acc[acc.length - 1].tests.push({
                 name: failure.error.name,
-                test: failure.error.test,
+                test: failure.error.test || 'connection error',
                 message: failure.error.message
             })
         }
@@ -127,7 +127,7 @@ function failErrors(parsedErrors) {
     return parsedErrors.reduce((acc, error, index) => {
         acc = acc + `
         {
-            "value": "${index +1}. ${error.name} - ${error.test}",
+            "value": "*\`${index +1}. ${error.name} - ${error.test}\`*",
             "short": false
         },`;
         return acc;
