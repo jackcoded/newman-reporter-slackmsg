@@ -5,7 +5,6 @@
   "main": "index.ts",
   "scripts": {
     "lint": "eslint index/js",
-    "pack": "rm newman-reporter-slack-1.0.0.tgz && npm pack && npm install -g newman-reporter-slack-1.0.0.tgz",
     "test": "jest --passWithNoTests"
   },
   "repository": {
