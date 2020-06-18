@@ -8,8 +8,23 @@
     "pack": "rm newman-reporter-slack-1.0.0.tgz && npm pack && npm install -g newman-reporter-slack-1.0.0.tgz",
     "test": "jest --passWithNoTests"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jackcoded/newman-reporter-slackmsg/"
+  },
+  "keywords": [
+    "newman",
+    "postman",
+    "slack",
+    "newman reporter",
+    "custom newman reporter"
+  ],
   "author": "Jack Chaw",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jackcoded/newman-reporter-slackmsg/issues"
+  },
+  "homepage": "https://github.com/jackcoded/newman-reporter-slackmsg#readme",
   "dependencies": {
     "@types/node": "^14.0.13",
     "axios": "^0.19.2",
