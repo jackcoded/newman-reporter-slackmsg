@@ -47,6 +47,14 @@ function slackMessage(stats, timings, failures, sha, env) {
                 "fields": [
                     {
                         "type": "mrkdwn",
+                        "text": "Total Tests:"
+                    },
+                    {
+                        "type": "mrkdwn",
+                        "text": "${stats.requests.total}"
+                    },
+                    {
+                        "type": "mrkdwn",
                         "text": "Test Passed:"
                     },
                     {
