@@ -2,7 +2,8 @@ const prettyms = require('pretty-ms');
 const axios = require('axios').default;
 var jsonminify = require("jsonminify");
 
-function slackMessage(stats, timings, failures, sha, env) {
+// creates message for slack
+function slackMessage(stats, timings, failures) {
     let parsedFailures = parseFailures(failures);
     let failureMessage = `
     "attachments": [
@@ -87,7 +88,7 @@ function slackMessage(stats, timings, failures, sha, env) {
        }`);
 }
 
-
+// Takes fail report and parse it for further processing
 function parseFailures(failures) {
     return failures.reduce((acc, failure, index) => {
         if (index === 0) {
@@ -96,29 +97,29 @@ function parseFailures(failures) {
                 tests: [{
                     name: failure.error.name || 'No test name',
                     test: failure.error.test || 'connection error',
-                    message: failure.error.message
+                    message: failure.error.message || 'No Error Message'
                 }]
             });
         } else if (acc[acc.length - 1].name !== failure.source.name) {
             acc.push({
-                name: failure.source.name,
+                name: failure.source.name || 'No Name',
                 tests: [{
-                    name: failure.error.name,
+                    name: failure.error.name || 'No test name',
                     test: failure.error.test || 'connection error',
-                    message: failure.error.message
+                    message: failure.error.message || 'No Error Message'
                 }]
             });
         } else {
             acc[acc.length - 1].tests.push({
-                name: failure.error.name,
+                name: failure.error.name || 'No test name',
                 test: failure.error.test || 'connection error',
-                message: failure.error.message
+                message: failure.error.message || 'No Error Message'
             })
         }
         return acc;
     }, []);
 }
-
+// Takes parsedFailures and create failMessages
 function failMessage(parsedFailures) {
     return parsedFailures.reduce((acc, failure) => {
         acc = acc + `
@@ -130,7 +131,7 @@ function failMessage(parsedFailures) {
         return acc;
     }, '');
 }
-
+// Takes failMessages and create Error messages for each failures
 function failErrors(parsedErrors) {
     return parsedErrors.reduce((acc, error, index) => {
         acc = acc + `
@@ -142,8 +143,8 @@ function failErrors(parsedErrors) {
     }, '');
 
 }
-
-async function send(slackHookUrl, message, contentType) {
+// sends the message to slack via POST to webhook url
+async function send(slackHookUrl, message) {
     const payload = {
         method: 'POST',
         url: slackHookUrl,
@@ -157,10 +158,12 @@ async function send(slackHookUrl, message, contentType) {
         result = await axios(payload);
     } catch (e) {
         result = false;
-        console.log(`Error in sending message to slack ${e}`);
+        console.error(`Error in sending message to slack ${e}`);
     }
     return result;
 }
 
-exports.send = send;
-exports.slackMessage = slackMessage;
+exports.slackUtils = {
+    send,
+    slackMessage
+};
