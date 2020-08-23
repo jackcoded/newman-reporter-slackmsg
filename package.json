@@ -29,7 +29,6 @@
     "axios": "^0.19.2",
     "esm": "^3.2.25",
     "jsonminify": "^0.4.1",
-    "newman": "^5.1.2",
     "pretty-ms": "^7.0.0"
   },
   "devDependencies": {
