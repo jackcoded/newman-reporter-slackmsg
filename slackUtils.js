@@ -2,8 +2,10 @@ const prettyms = require('pretty-ms');
 const axios = require('axios').default;
 var jsonminify = require("jsonminify");
 
+var maxMessageSize;
 // creates message for slack
-function slackMessage(stats, timings, failures) {
+function slackMessage(stats, timings, failures, maxMessageSize, collection, environment) {
+    this.maxMessageSize = maxMessageSize;
     let parsedFailures = parseFailures(failures);
     let failureMessage = `
     "attachments": [
@@ -36,6 +38,7 @@ function slackMessage(stats, timings, failures) {
             {
                 "type": "divider"
             },
+            ${collectionNameBlock(collection, environment)}
             {
                 "type": "section",
                 "text": {
@@ -72,6 +75,14 @@ function slackMessage(stats, timings, failures) {
                     },
                     {
                         "type": "mrkdwn",
+                        "text": "Test Assertions:"
+                    },
+                    {
+                        "type": "mrkdwn",
+                        "text": "Total: ${stats.assertions.total}  Failed: ${stats.assertions.failed}"
+                    },
+                    {
+                        "type": "mrkdwn",
                         "text": "Test Duration:"
                     },
                     {
@@ -86,6 +97,19 @@ function slackMessage(stats, timings, failures) {
         ],
         ${failures.length > 0 ? failureMessage : successMessage }
        }`);
+}
+
+function collectionNameBlock(collection, environment) {
+    if (collection) {
+        return `{
+            "type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Collection: ${collection} \\n Environment: ${environment}"
+			}
+        }, `
+    }
+    return '';
 }
 
 // Takes fail report and parse it for further processing
@@ -138,11 +162,27 @@ function failErrors(parsedErrors) {
         {
             "value": "*\`${index +1}. ${error.name} - ${error.test}\`*",
             "short": false
+        },
+        {
+            "value": "• ${cleanErrorMessage(error.message, maxMessageSize)}",
+            "short": false,
         },`;
         return acc;
     }, '');
-
 }
+
+function cleanErrorMessage(message, maxMessageSize) {
+    // replaces the quotes and double quotes in order for the message to be valid json format
+    // as well as cutting messages to size 100 and truncating it with ...
+    let filteredMessage = message.replace(/["']/g, "")
+    filteredMessage = filteredMessage.replace('expected', 'Expected -')
+    if (filteredMessage.length > maxMessageSize) {
+        return `${filteredMessage.substring(0, maxMessageSize)}...`;
+    } 
+    return filteredMessage;
+}
+
+
 // sends the message to slack via POST to webhook url
 async function send(slackHookUrl, message) {
     const payload = {

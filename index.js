@@ -7,13 +7,19 @@ function SlackNewmanReporter(emitter, reporterOptions) {
         return;
     }
     const webhookUrl = reporterOptions.webhookurl;
+    const messageSize = reporterOptions.messageSize || 100;
+    const collection = reporterOptions.collection || '';
+    const environment = reporterOptions.environment || '';
+
+
     emitter.on('done', (error, summary) => {
         if (error) {
             console.error('error in done')
             return;
         }
         let run = summary.run;
-        slackUtils.send(webhookUrl, slackUtils.slackMessage(run.stats, run.timings, run.failures));
+        console.log(run.stats);
+        slackUtils.send(webhookUrl, slackUtils.slackMessage(run.stats, run.timings, run.failures, messageSize, collection, environment));
     });
     
     function missingReporterOptions(reporterOptions) {
