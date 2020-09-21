@@ -2,7 +2,7 @@
 
 Custom [Newman](https://github.com/postmanlabs/newman) reporter to send message to [Slack](https://slack.com/)
 
-<img src="https://github.com/jackcoded/newman-reporter-slackmsg/blob/master/testResults.png?raw=true" width="450"  height="400">
+<img src="https://github.com/jackcoded/newman-reporter-slackmsg/blob/master/testResults.png?raw=true" width="450"  height="550">
 
 ## Before you get started
 - Install [Newman](https://github.com/postmanlabs/newman) ``` $ npm run i -g newman ```
@@ -17,6 +17,7 @@ Custom [Newman](https://github.com/postmanlabs/newman) reporter to send message 
 ```CLI
  newman run <collectionFile> -e <environmentFile> --suppress-exit-code -r slackmsg --reporter-slackmsg-webhookurl '<webhookurl>'
 ```
+## Usage Optionals
 ```CLI optionals with collection, environment, messageSize
  newman run <collectionFilePath> -e <environmentFilePath> --suppress-exit-code -r slackmsg --reporter-slackmsg-webhookurl '<webhookurl>', --reporter-slackmsg-collection '<collectionName>' --reporter-slackmsg-environment '<environmentName>' --reporter-slackmsg-messageSize '<messageSize>'
 ```
