@@ -18,7 +18,6 @@ function SlackNewmanReporter(emitter, reporterOptions) {
             return;
         }
         let run = summary.run;
-        console.log(run.stats);
         slackUtils.send(webhookUrl, slackUtils.slackMessage(run.stats, run.timings, run.failures, messageSize, collection, environment));
     });
     

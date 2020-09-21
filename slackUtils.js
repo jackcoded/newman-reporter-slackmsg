@@ -2,10 +2,11 @@ const prettyms = require('pretty-ms');
 const axios = require('axios').default;
 var jsonminify = require("jsonminify");
 
-var maxMessageSize;
+let messageSize;
+
 // creates message for slack
 function slackMessage(stats, timings, failures, maxMessageSize, collection, environment) {
-    this.maxMessageSize = maxMessageSize;
+    messageSize = maxMessageSize;
     let parsedFailures = parseFailures(failures);
     let failureMessage = `
     "attachments": [
@@ -38,7 +39,7 @@ function slackMessage(stats, timings, failures, maxMessageSize, collection, envi
             {
                 "type": "divider"
             },
-            ${collectionNameBlock(collection, environment)}
+            ${collectionAndEnvironentFileBlock(collection, environment)}
             {
                 "type": "section",
                 "text": {
@@ -99,13 +100,13 @@ function slackMessage(stats, timings, failures, maxMessageSize, collection, envi
        }`);
 }
 
-function collectionNameBlock(collection, environment) {
+function collectionAndEnvironentFileBlock(collection, environment) {
     if (collection) {
         return `{
             "type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "Collection: ${collection} \\n Environment: ${environment}"
+				"text": "Collection: ${collection} \\n Environment: ${environment ? environment : '' }"
 			}
         }, `
     }
@@ -143,6 +144,7 @@ function parseFailures(failures) {
         return acc;
     }, []);
 }
+
 // Takes parsedFailures and create failMessages
 function failMessage(parsedFailures) {
     return parsedFailures.reduce((acc, failure) => {
@@ -155,6 +157,7 @@ function failMessage(parsedFailures) {
         return acc;
     }, '');
 }
+
 // Takes failMessages and create Error messages for each failures
 function failErrors(parsedErrors) {
     return parsedErrors.reduce((acc, error, index) => {
@@ -164,7 +167,7 @@ function failErrors(parsedErrors) {
             "short": false
         },
         {
-            "value": "• ${cleanErrorMessage(error.message, maxMessageSize)}",
+            "value": "• ${cleanErrorMessage(error.message, messageSize)}",
             "short": false,
         },`;
         return acc;
