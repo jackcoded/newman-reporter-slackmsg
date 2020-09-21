@@ -2,7 +2,7 @@
 
 Custom [Newman](https://github.com/postmanlabs/newman) reporter to send message to [Slack](https://slack.com/)
 
-<img src="https://github.com/jackcoded/newman-reporter-slackmsg/blob/master/testResults.png?raw=true" width="500"  height="450">
+<img src="https://github.com/jackcoded/newman-reporter-slackmsg/blob/master/testResults.png?raw=true" width="500"  height="550">
 
 ## Before you get started
 - Install [Newman](https://github.com/postmanlabs/newman) ``` $ npm run i -g newman ```
