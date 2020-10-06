@@ -5,7 +5,7 @@ var jsonminify = require("jsonminify");
 let messageSize;
 
 // creates message for slack
-function slackMessage(stats, timings, failures, maxMessageSize, collection, environment) {
+function slackMessage(stats, timings, failures, maxMessageSize, collection, environment, channel) {
     messageSize = maxMessageSize;
     let parsedFailures = parseFailures(failures);
     let failureMessage = `
@@ -35,6 +35,7 @@ function slackMessage(stats, timings, failures, maxMessageSize, collection, envi
     ]`
     return jsonminify(`
     {
+        "channel": "${channel}",
         "blocks": [
             {
                 "type": "divider"
@@ -187,18 +188,20 @@ function cleanErrorMessage(message, maxMessageSize) {
 
 
 // sends the message to slack via POST to webhook url
-async function send(slackHookUrl, message) {
+async function send(url, message, token) {
     const payload = {
         method: 'POST',
-        url: slackHookUrl,
-        data: message,
+        url,
         headers: {
             'content-type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
+        data: message
     };
     let result;
     try {
         result = await axios(payload);
+        console.log(result);
     } catch (e) {
         result = false;
         console.error(`Error in sending message to slack ${e}`);

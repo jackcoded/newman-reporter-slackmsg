@@ -7,6 +7,9 @@
     "lint": "eslint index/js",
     "test": "jest"
   },
+  "publishConfig": { 
+    "registry": "https://npm.pkg.github.com/" 
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/jackcoded/newman-reporter-slackmsg/"
