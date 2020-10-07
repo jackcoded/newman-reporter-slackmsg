@@ -8,9 +8,6 @@
     "test": "jest",
     "prepack": "npm run test"
   },
-  "publishConfig": { 
-    "registry": "https://npm.pkg.github.com/@jackcoded" 
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/jackcoded/newman-reporter-slackmsg/"
