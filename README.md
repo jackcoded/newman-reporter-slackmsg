@@ -7,6 +7,8 @@ Custom [Newman](https://github.com/postmanlabs/newman) reporter to send message 
 ## Before you get started
 - Install [Newman](https://github.com/postmanlabs/newman) ``` $ npm run i -g newman ```
 - Create a [Slack incoming webhook url](https://api.slack.com/messaging/webhooks)
+or
+- Create a [Slack bot to send to channel or user dynamically](https://api.slack.com/messaging/sending)
 
 ## Installation
  ```CLI
@@ -17,20 +19,35 @@ Custom [Newman](https://github.com/postmanlabs/newman) reporter to send message 
 ```CLI
  newman run <collectionFile> -e <environmentFile> --suppress-exit-code -r slackmsg --reporter-slackmsg-webhookurl '<webhookurl>'
 ```
-## Usage Optionals
-```CLI optionals with collection, environment, messageSize
- newman run <collectionFilePath> -e <environmentFilePath> --suppress-exit-code -r slackmsg --reporter-slackmsg-webhookurl '<webhookurl>', --reporter-slackmsg-collection '<collectionName>' --reporter-slackmsg-environment '<environmentName>' --reporter-slackmsg-messageSize '<messageSize>'
+
+## Usage with channel override bot
+```CLI
+ newman run <collectionFile> -e <environmentFile> --suppress-exit-code -r slackmsg --reporter-slackmsg-webhookurl '<https://slack.com/api/chat.postMessage>' --reporter-slackmsg-token '<bearer token>' --reporter-slackmsg-chanel '<channel or userid>'
 ```
+
+## Reporter Options Optionals
+```
+ --reporter-slackmsg-messageSize '<messageSize>' e.g 150
+ --reporter-slackmsg-token '<bearer token>' e.g xoxb-XXXXXXXXXXXX-TTTTTTTTTTTTTT
+ --reporter-slackmsg-chanel '<channel>' e.g #general
+```
+
 
 ## Reporter Options
 **webhookurl** 
-Webhook URL to point to the slack channel where results are published
-
-**messageSize**
-Option to change the message size, defaulted to 100
+Webhook URL to point to the slack api where results are published
 
 **collection** 
 Option to add the name of collection file onto the message
 
 **environment**
 Option to add the name of environment file onto the message
+
+**messageSize**
+Option to change the message size, defaulted to 100
+
+**token**
+Option to use bearer token for slack bots for channel override
+
+**channel**
+Option to select channel or user receive the result

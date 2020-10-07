@@ -22,6 +22,17 @@ describe('SlackNewmanReporter', () => {
         expect(slackUtils.slackMessage).not.toHaveBeenCalled();
     });
 
+    test('should show error if missing channel override values ', () => {
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+        
+        slackNewmanReporter(mockEmitter, {webhookurl: 'https://slack.com/api/chat.postMessage'}, {});
+        
+        expect(consoleErrorSpy).toBeCalledTimes(2);
+        expect(slackUtils.send).not.toHaveBeenCalled();
+        expect(slackUtils.slackMessage).not.toHaveBeenCalled();
+    });
+
+    
     test('should show error if emit error in emitter', () => {
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
         slackNewmanReporter(mockEmitter, {webhookurl: 'test'}, {});
@@ -32,7 +43,7 @@ describe('SlackNewmanReporter', () => {
         expect(slackUtils.slackMessage).not.toHaveBeenCalled();
     });
 
-    test('should start slack reporter given no errors', () => {
+    test('should start slack reporter given no errors for webhook', () => {
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
 
         slackNewmanReporter(mockEmitter, {webhookurl: 'test'}, {});
@@ -42,6 +53,18 @@ describe('SlackNewmanReporter', () => {
         expect(slackUtils.slackMessage).toHaveBeenCalled();
         expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
+
+    test('should start slack reporter given no errors for channel override', () => {
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+
+        slackNewmanReporter(mockEmitter, {webhookurl: 'https://slack.com/api/chat.postMessage', token: 'testtoken', channel:'testchannel'}, {});
+        mockEmitter.emit('done', '', summary);
+
+        expect(slackUtils.send).toHaveBeenCalled();
+        expect(slackUtils.slackMessage).toHaveBeenCalled();
+        expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+
 
     afterEach(() => {
         jest.clearAllMocks();

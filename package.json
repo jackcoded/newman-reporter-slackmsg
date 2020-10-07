@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint index/js",
-    "test": "jest"
+    "test": "jest",
+    "prepack": "npm run test"
+  },
+  "publishConfig": { 
+    "registry": "https://npm.pkg.github.com/" 
   },
   "repository": {
     "type": "git",
