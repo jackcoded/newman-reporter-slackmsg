@@ -9,7 +9,7 @@
     "prepack": "npm run test"
   },
   "publishConfig": { 
-    "registry": "https://npm.pkg.github.com/" 
+    "registry": "https://npm.pkg.github.com/@jackcoded" 
   },
   "repository": {
     "type": "git",
