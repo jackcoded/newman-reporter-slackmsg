@@ -18,17 +18,34 @@ describe('slackUtils', () => {
         test('should send slack notification if no error', async () => {
             const mockPayload = {
                 method: 'POST',
-                url: 'test',
+                url: 'testurl',
                 data: '{"test":"test"}',
                 headers: {
                     'content-type': 'application/json',
+                    'Authorization': 'Bearer '
                 },
             };
             const mockResponse = { data: 'Hello' }
             axios.mockResolvedValue(mockResponse);
-            const result = await slackUtils.send('test', '{"test":"test"}')
+            const result = await slackUtils.send('testurl', '{"test":"test"}', '')
             expect(result).toEqual(mockResponse);
-            expect(axios).toBeCalled();
+            expect(axios).toBeCalledWith(mockPayload);
+        });
+
+        test('should send slack notification with token', async () => {
+            const mockPayload = {
+                method: 'POST',
+                url: 'https://slack.com/api/chat.postMessage',
+                data: '{"test":"test"}',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': 'Bearer faketoken'
+                },
+            };
+            const mockResponse = { data: 'Hello' }
+            axios.mockResolvedValue(mockResponse);
+            const result = await slackUtils.send('https://slack.com/api/chat.postMessage', '{"test":"test"}', 'faketoken')
+            expect(result).toEqual(mockResponse);
             expect(axios).toBeCalledWith(mockPayload);
         });
     });
@@ -88,8 +105,12 @@ describe('slackUtils', () => {
 
 
         test('should return good result', () => {
-            const result = slackUtils.slackMessage(mockPassStats, mockTimings, []);
+            const result = slackUtils.slackMessage(mockPassStats, mockTimings, [], 100, '', '', '#general');
+
             const duration = prettyms(mockTimings.completed - mockTimings.started)
+            // should include channel name if given for channel override
+            expect(result).toContain(`"channel":"#general"`);
+            // successful message 
             expect(result).toContain(`{"type":"mrkdwn","text":"Total Tests:"},{"type":"mrkdwn","text":"4"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Failed:"},{"type":"mrkdwn","text":"0"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Duration:"},{"type":"mrkdwn","text":"${duration}"}`);
@@ -101,18 +122,20 @@ describe('slackUtils', () => {
             const collectionFileName = 'testCollection'
             const environmentFileName = 'testEnvironment';
             const result = slackUtils.slackMessage(mockFailStats, mockTimings, [], 100, collectionFileName, environmentFileName);
-            expect(result).toContain(`{"type":"mrkdwn","text":"Collection: ${collectionFileName} \\n Environment: ${environmentFileName}"}}`)
 
+            expect(result).toContain(`{"type":"mrkdwn","text":"Collection: ${collectionFileName} \\n Environment: ${environmentFileName}"}}`)
         });
 
         test('should return message truncate by message size', () => {
             const result = slackUtils.slackMessage(mockFailStats, mockTimings, mockFail, 106);
+
             expect(result).toContain(`Expected - response to have status code 500 but got 200 test more than 100 characters blah blah blah blah ...`);
         });
 
         test('should return failure result', () => {
             const result = slackUtils.slackMessage(mockFailStats, mockTimings, mockFail, 100);
             const duration = prettyms(mockTimings.completed - mockTimings.started)
+            
             expect(result).toContain(`{"type":"mrkdwn","text":"Total Tests:"},{"type":"mrkdwn","text":"4"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Failed:"},{"type":"mrkdwn","text":"2"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Duration:"},{"type":"mrkdwn","text":"${duration}"}`);

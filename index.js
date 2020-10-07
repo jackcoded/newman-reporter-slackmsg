@@ -28,6 +28,16 @@ function SlackNewmanReporter(emitter, reporterOptions) {
             console.error('Missing Slack Webhook Url');
             missing = true;
         }
+        if (reporterOptions.webhookurl === 'https://slack.com/api/chat.postMessage') {
+            if (!reporterOptions.token) {
+                console.error('Missing Bearer Token');
+                missing = true;
+            }
+            if (!reporterOptions.channel) {
+                console.error('Missing channel');
+                missing = true;
+            }
+        }
         return missing;
     }
 }

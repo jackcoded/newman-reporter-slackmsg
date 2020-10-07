@@ -7,6 +7,8 @@ Custom [Newman](https://github.com/postmanlabs/newman) reporter to send message 
 ## Before you get started
 - Install [Newman](https://github.com/postmanlabs/newman) ``` $ npm run i -g newman ```
 - Create a [Slack incoming webhook url](https://api.slack.com/messaging/webhooks)
+or
+- Create a [Slack bot to send to channel or user dynamically](https://api.slack.com/messaging/sending)
 
 ## Installation
  ```CLI
@@ -17,6 +19,12 @@ Custom [Newman](https://github.com/postmanlabs/newman) reporter to send message 
 ```CLI
  newman run <collectionFile> -e <environmentFile> --suppress-exit-code -r slackmsg --reporter-slackmsg-webhookurl '<webhookurl>'
 ```
+
+## Usage with channel override bot
+```CLI
+ newman run <collectionFile> -e <environmentFile> --suppress-exit-code -r slackmsg --reporter-slackmsg-webhookurl '<https://slack.com/api/chat.postMessage>' --reporter-slackmsg-token '<bearer token>' --reporter-slackmsg-chanel '<channel or userid>'
+```
+
 ## Reporter Options Optionals
 ```
  --reporter-slackmsg-messageSize '<messageSize>' e.g 150
