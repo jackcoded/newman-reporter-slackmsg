@@ -47,7 +47,7 @@
 						"id": "24b1a999-4894-4375-a30a-185c809cb820",
 						"exec": [
 							"pm.test(\"Status code is 400\", function () {",
-							"    pm.expect(pm.response.to.have.status(200));",
+							"    pm.expect(pm.response.to.have.status(400));",
 							"});"
 						],
 						"type": "text/javascript"
