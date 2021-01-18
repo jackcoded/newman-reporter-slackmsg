@@ -134,6 +134,7 @@ describe('slackUtils', () => {
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Failed:"},{"type":"mrkdwn","text":"0"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Skipped:"},{"type":"mrkdwn","text":"1"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Duration:"},{"type":"mrkdwn","text":"${duration}"}`);
+            expect(result).toContain(`{"type":"mrkdwn","text":"Assertions:"},{"type":"mrkdwn","text":"Total: 2  Failed: 0"}`);
             expect(result).toContain(`:white_check_mark: All Passed :white_check_mark:`);
         });
 
@@ -160,6 +161,7 @@ describe('slackUtils', () => {
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Passed:"},{"type":"mrkdwn","text":"2"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Failed:"},{"type":"mrkdwn","text":"2"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Skipped:"},{"type":"mrkdwn","text":"0"}`);
+            expect(result).toContain(`{"type":"mrkdwn","text":"Assertions:"},{"type":"mrkdwn","text":"Total: 2  Failed: 1"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Duration:"},{"type":"mrkdwn","text":"${duration}"}`);
             //failures
             expect(result).toContain(`:fire: Failures :fire:`);

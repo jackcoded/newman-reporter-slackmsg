@@ -86,14 +86,6 @@ function slackMessage(stats, timings, failures, executions, maxMessageSize, coll
                     },
                     {
                         "type": "mrkdwn",
-                        "text": "Test Assertions:"
-                    },
-                    {
-                        "type": "mrkdwn",
-                        "text": "Total: ${stats.assertions.total}  Failed: ${stats.assertions.failed}"
-                    },
-                    {
-                        "type": "mrkdwn",
                         "text": "Test Duration:"
                     },
                     {
@@ -103,10 +95,23 @@ function slackMessage(stats, timings, failures, executions, maxMessageSize, coll
                 ],
             },
             {
+                "type": "section",
+                "fields": [
+                {
+                    "type": "mrkdwn",
+                    "text": "Assertions:"
+                },
+                {
+                    "type": "mrkdwn",
+                    "text": "Total: ${stats.assertions.total}  Failed: ${stats.assertions.failed}"
+                },
+            ]
+            },
+            {
                 "type": "divider"
             },
         ],
-        ${failures.length > 0 ? failureMessage : successMessage }
+        ${failures.length > 0 ? failureMessage : successMessage}
        }`);
 }
 
@@ -116,7 +121,7 @@ function collectionAndEnvironentFileBlock(collection, environment) {
             "type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "Collection: ${collection} \\n Environment: ${environment ? environment : '' }"
+				"text": "Collection: ${collection} \\n Environment: ${environment ? environment : ''}"
 			}
         }, `
     }
@@ -127,7 +132,7 @@ function getSkipCount(executions) {
     return executions.reduce((acc, execution) => {
         if (execution.assertions) {
             if (execution.assertions[0].skipped) {
-            acc = acc + 1;
+                acc = acc + 1;
             };
         };
         return acc;
@@ -185,7 +190,7 @@ function failErrors(parsedErrors) {
     return parsedErrors.reduce((acc, error, index) => {
         acc = acc + `
         {
-            "value": "*\`${index +1}. ${error.name} - ${error.test}\`*",
+            "value": "*\`${index + 1}. ${error.name} - ${error.test}\`*",
             "short": false
         },
         {
@@ -203,7 +208,7 @@ function cleanErrorMessage(message, maxMessageSize) {
     filteredMessage = filteredMessage.replace('expected', 'Expected -')
     if (filteredMessage.length > maxMessageSize) {
         return `${filteredMessage.substring(0, maxMessageSize)}...`;
-    } 
+    }
     return filteredMessage;
 }
 
