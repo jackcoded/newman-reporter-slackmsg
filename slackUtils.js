@@ -5,9 +5,10 @@ var jsonminify = require("jsonminify");
 let messageSize;
 
 // creates message for slack
-function slackMessage(stats, timings, failures, maxMessageSize, collection, environment, channel) {
+function slackMessage(stats, timings, failures, executions, maxMessageSize, collection, environment, channel) {
     messageSize = maxMessageSize;
     let parsedFailures = parseFailures(failures);
+    let skipCount = getSkipCount(executions);
     let failureMessage = `
     "attachments": [
         {
@@ -65,7 +66,7 @@ function slackMessage(stats, timings, failures, maxMessageSize, collection, envi
                     },
                     {
                         "type": "mrkdwn",
-                        "text": "${stats.requests.total - parsedFailures.length}"
+                        "text": "${stats.requests.total - parsedFailures.length - skipCount}"
                     },
                     {
                         "type": "mrkdwn",
@@ -74,6 +75,14 @@ function slackMessage(stats, timings, failures, maxMessageSize, collection, envi
                     {
                         "type": "mrkdwn",
                         "text": "${parsedFailures.length}"
+                    },
+                    {
+                        "type": "mrkdwn",
+                        "text": "Test Skipped:"
+                    },
+                    {
+                        "type": "mrkdwn",
+                        "text": "${skipCount}"
                     },
                     {
                         "type": "mrkdwn",
@@ -113,6 +122,18 @@ function collectionAndEnvironentFileBlock(collection, environment) {
     }
     return '';
 }
+
+function getSkipCount(executions) {
+    return executions.reduce((acc, execution) => {
+        if (execution.assertions) {
+            if (execution.assertions[0].skipped) {
+            acc = acc + 1;
+            };
+        };
+        return acc;
+    }, 0);
+}
+
 
 // Takes fail report and parse it for further processing
 function parseFailures(failures) {

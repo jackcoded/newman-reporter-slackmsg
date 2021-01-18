@@ -19,7 +19,7 @@ function SlackNewmanReporter(emitter, reporterOptions) {
             return;
         }
         let run = summary.run;
-        slackUtils.send(webhookUrl, slackUtils.slackMessage(run.stats, run.timings, run.failures, messageSize, collection, environment, channel), token);
+        slackUtils.send(webhookUrl, slackUtils.slackMessage(run.stats, run.timings, run.failures, run.executions, messageSize, collection, environment, channel), token);
     });
 
     function missingReporterOptions(reporterOptions) {

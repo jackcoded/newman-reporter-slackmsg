@@ -1,7 +1,7 @@
 {
   "name": "newman-reporter-slackmsg",
   "version": "1.3.0",
-  "description": "newman report to slack",
+  "description": "newman reporter to slack",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index/js",

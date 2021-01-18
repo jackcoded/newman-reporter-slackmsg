@@ -103,16 +103,36 @@ describe('slackUtils', () => {
             assertions: { total: 2, failed: 0 }
         }
 
+        const mockExecutions = [
+            {
+                "assertions": [
+                    {
+                        "assertion": "Status code is 500",
+                        "skipped": false
+                    }
+                ]
+            },
+            {
+                "assertions": [
+                    {
+                        "assertion": "Status code is 200",
+                        "skipped": true
+                    }
+                ]
+            }
+        ];
 
         test('should return good result', () => {
-            const result = slackUtils.slackMessage(mockPassStats, mockTimings, [], 100, '', '', '#general');
+            const result = slackUtils.slackMessage(mockPassStats, mockTimings, [], mockExecutions, 100, '', '', '#general');
 
             const duration = prettyms(mockTimings.completed - mockTimings.started)
             // should include channel name if given for channel override
             expect(result).toContain(`"channel":"#general"`);
             // successful message 
             expect(result).toContain(`{"type":"mrkdwn","text":"Total Tests:"},{"type":"mrkdwn","text":"4"}`);
+            expect(result).toContain(`{"type":"mrkdwn","text":"Test Passed:"},{"type":"mrkdwn","text":"3"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Failed:"},{"type":"mrkdwn","text":"0"}`);
+            expect(result).toContain(`{"type":"mrkdwn","text":"Test Skipped:"},{"type":"mrkdwn","text":"1"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Duration:"},{"type":"mrkdwn","text":"${duration}"}`);
             expect(result).toContain(`:white_check_mark: All Passed :white_check_mark:`);
         });
@@ -121,23 +141,25 @@ describe('slackUtils', () => {
         test('should return message with collection and environment', () => {
             const collectionFileName = 'testCollection'
             const environmentFileName = 'testEnvironment';
-            const result = slackUtils.slackMessage(mockFailStats, mockTimings, [], 100, collectionFileName, environmentFileName);
+            const result = slackUtils.slackMessage(mockFailStats, mockTimings, [], mockExecutions, 100, collectionFileName, environmentFileName);
 
             expect(result).toContain(`{"type":"mrkdwn","text":"Collection: ${collectionFileName} \\n Environment: ${environmentFileName}"}}`)
         });
 
         test('should return message truncate by message size', () => {
-            const result = slackUtils.slackMessage(mockFailStats, mockTimings, mockFail, 106);
+            const result = slackUtils.slackMessage(mockFailStats, mockTimings, mockFail, mockExecutions, 106);
 
             expect(result).toContain(`Expected - response to have status code 500 but got 200 test more than 100 characters blah blah blah blah ...`);
         });
 
         test('should return failure result', () => {
-            const result = slackUtils.slackMessage(mockFailStats, mockTimings, mockFail, 100);
+            const result = slackUtils.slackMessage(mockFailStats, mockTimings, mockFail, [], 100);
             const duration = prettyms(mockTimings.completed - mockTimings.started)
             
             expect(result).toContain(`{"type":"mrkdwn","text":"Total Tests:"},{"type":"mrkdwn","text":"4"}`);
+            expect(result).toContain(`{"type":"mrkdwn","text":"Test Passed:"},{"type":"mrkdwn","text":"2"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Failed:"},{"type":"mrkdwn","text":"2"}`);
+            expect(result).toContain(`{"type":"mrkdwn","text":"Test Skipped:"},{"type":"mrkdwn","text":"0"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Duration:"},{"type":"mrkdwn","text":"${duration}"}`);
             //failures
             expect(result).toContain(`:fire: Failures :fire:`);

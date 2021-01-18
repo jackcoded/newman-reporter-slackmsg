@@ -30,6 +30,9 @@ or
  --reporter-slackmsg-messageSize '<messageSize>' e.g 150
  --reporter-slackmsg-token '<bearer token>' e.g xoxb-XXXXXXXXXXXX-TTTTTTTTTTTTTT
  --reporter-slackmsg-chanel '<channel>' e.g #general
+ --reporter-slackmsg-collection '<collectionName> e.g test.json
+ --reporter-slackmsg-environment '<environmentName> e.g env.json
+
 ```
 
 
