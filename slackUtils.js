@@ -19,7 +19,7 @@ function slackMessage(stats, timings, failures, executions, maxMessageSize, coll
             "fields": [
                 ${failMessage(parsedFailures)}
             ],
-            "footer": "Smoke Test",
+            "footer": "Newman Test",
             "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
         }
     ]`
@@ -30,7 +30,7 @@ function slackMessage(stats, timings, failures, executions, maxMessageSize, coll
             "color": "#008000",
             "author_name": "Newman Tests",
             "title": ":white_check_mark: All Passed :white_check_mark:",
-            "footer": "Smoke Test",
+            "footer": "Newman Test",
             "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
         }
     ]`
