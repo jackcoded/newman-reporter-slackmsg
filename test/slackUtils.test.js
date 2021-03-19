@@ -4,6 +4,7 @@ const {
 } = require('../slackUtils');
 const prettyms = require('pretty-ms');
 
+/* eslint-disable no-undef */
 jest.mock('axios');
 
 describe('slackUtils', () => {
