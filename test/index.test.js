@@ -2,6 +2,7 @@ const slackNewmanReporter = require('../index');
 const { slackUtils } = require('../slackUtils');
 const events = require('events');
 
+/* eslint-disable no-undef */
 jest.mock('../slackUtils');
 
 describe('SlackNewmanReporter', () => {
@@ -32,7 +33,6 @@ describe('SlackNewmanReporter', () => {
         expect(slackUtils.slackMessage).not.toHaveBeenCalled();
     });
 
-    
     test('should show error if emit error in emitter', () => {
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
         slackNewmanReporter(mockEmitter, {webhookurl: 'test'}, {});
@@ -41,6 +41,16 @@ describe('SlackNewmanReporter', () => {
         expect(consoleErrorSpy).toBeCalledTimes(1);
         expect(slackUtils.send).not.toHaveBeenCalled();
         expect(slackUtils.slackMessage).not.toHaveBeenCalled();
+    });
+
+    test('should show error in failures channel if failures occurred and failuresChannel specified', () => {
+        const failuresChannel = '#alerts'
+        const summary = {run: { stats: '', failures: [{0: 'error occurred'}], timings: {}}}
+        slackNewmanReporter(mockEmitter, {webhookurl: 'test', failuresChannel: failuresChannel}, {});
+        mockEmitter.emit('done', '', summary);
+
+        expect(slackUtils.send).toHaveBeenCalled();
+        expect(slackUtils.slackMessage).toBeCalledWith(...["", {}, summary.run.failures, undefined, 100, "", "", failuresChannel]);
     });
 
     test('should start slack reporter given no errors for webhook', () => {
