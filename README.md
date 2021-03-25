@@ -1,4 +1,6 @@
-# newman-reporter-slackmsg
+# newman-reporter-slackmsgmoov
+
+This module is a fork of [jackcoded/newman-reporter-slackmsg](https://github.com/jackcoded/newman-reporter-slackmsg)
 
 Custom [Newman](https://github.com/postmanlabs/newman) reporter to send message to [Slack](https://slack.com/)
 
@@ -12,7 +14,7 @@ or
 
 ## Installation
  ```CLI
- npm i -g newman-reporter-slackmsg
+ npm i -g newman-reporter-slackmsgmoov
  ```
 
 ## Usage
@@ -33,7 +35,6 @@ or
  --reporter-slackmsg-failuresChannel '<channel>' e.g. #alerts
  --reporter-slackmsg-collection '<collectionName> e.g test.json
  --reporter-slackmsg-environment '<environmentName> e.g env.json
-
 ```
 
 
