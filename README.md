@@ -29,7 +29,8 @@ or
 ```
  --reporter-slackmsg-messageSize '<messageSize>' e.g 150
  --reporter-slackmsg-token '<bearer token>' e.g xoxb-XXXXXXXXXXXX-TTTTTTTTTTTTTT
- --reporter-slackmsg-chanel '<channel>' e.g #general
+ --reporter-slackmsg-channel '<channel>' e.g #general
+ --reporter-slackmsg-failuresChannel '<channel>' e.g. #alerts
  --reporter-slackmsg-collection '<collectionName> e.g test.json
  --reporter-slackmsg-environment '<environmentName> e.g env.json
 
@@ -54,3 +55,6 @@ Option to use bearer token for slack bots for channel override
 
 **channel**
 Option to select channel or user receive the result
+
+**failuresChannel**
+Option to select channel or user to receive failures
