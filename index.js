@@ -11,7 +11,7 @@ function SlackNewmanReporter(emitter, reporterOptions) {
     const collection = reporterOptions.collection || '';
     const environment = reporterOptions.environment || '';
     const token = reporterOptions.token || '';
-    const reportingUrl = reporterOptions.reportingurl;
+    const reportingUrl = reporterOptions.reportingurl || '';
     let channel = reporterOptions.channel || '';
 
     emitter.on('done', (error, summary) => {
