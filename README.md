@@ -33,6 +33,7 @@ or
  --reporter-slackmsg-failuresChannel '<channel>' e.g. #alerts
  --reporter-slackmsg-collection '<collectionName> e.g test.json
  --reporter-slackmsg-environment '<environmentName> e.g env.json
+ --reporter-slackmsg-reportingurl '<URL> e.g https://127.0.1/index.html
 
 ```
 
