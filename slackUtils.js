@@ -191,31 +191,35 @@ function parseFailures(failures) {
 
 // Takes parsedFailures and create failMessages
 function failMessage(parsedFailures) {
-    return parsedFailures.reduce((acc, failure) => {
-        acc = acc + `
+    const failures = parsedFailures.reduce((acc, failure) => {
+        acc.push(`
         {
             "title": "${failure.name}",
             "short": false
         },
-        ${failErrors(failure.tests)}`
+        ${failErrors(failure.tests)}`)
         return acc;
-    }, '');
+    }, []);
+
+    return failures.join()
 }
 
 // Takes failMessages and create Error messages for each failures
 function failErrors(parsedErrors) {
-    return parsedErrors.reduce((acc, error, index) => {
-        acc = acc + `
+    const errors = parsedErrors.reduce((acc, error, index) => {
+        acc.push(`
         {
             "value": "*\`${index + 1}. ${error.name} - ${error.test}\`*",
             "short": false
         },
         {
             "value": "• ${cleanErrorMessage(error.message, messageSize)}",
-            "short": false,
-        },`;
+            "short": false
+        }`);
         return acc;
-    }, '');
+    }, []);
+
+    return errors.join()
 }
 
 function cleanErrorMessage(message, maxMessageSize) {
