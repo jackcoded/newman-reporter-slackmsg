@@ -20,7 +20,7 @@ function slackMessage(stats, timings, failures, executions, maxMessageSize, coll
                 ${failMessage(parsedFailures)}
             ],
             "footer": "Newman Test",
-            "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+            "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
         }
     ]`
     let successMessage = `
@@ -31,7 +31,7 @@ function slackMessage(stats, timings, failures, executions, maxMessageSize, coll
             "author_name": "Newman Tests",
             "title": ":white_check_mark: All Passed :white_check_mark:",
             "footer": "Newman Test",
-            "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+            "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
         }
     ]`
     return jsonminify(`
@@ -95,8 +95,8 @@ function slackMessage(stats, timings, failures, executions, maxMessageSize, coll
                     {
                         "type": "mrkdwn",
                         "text": "${prettyms(timings.completed - timings.started)}"
-                    },
-                ],
+                    }
+                ]
             },
             {
                 "type": "section",
@@ -108,12 +108,12 @@ function slackMessage(stats, timings, failures, executions, maxMessageSize, coll
                 {
                     "type": "mrkdwn",
                     "text": "Total: ${stats.assertions.total}  Failed: ${stats.assertions.failed}"
-                },
+                }
             ]
             },
             {
                 "type": "divider"
-            },
+            }
         ],
         ${failures.length > 0 ? failureMessage : successMessage}
        }`);
@@ -191,31 +191,29 @@ function parseFailures(failures) {
 
 // Takes parsedFailures and create failMessages
 function failMessage(parsedFailures) {
-    return parsedFailures.reduce((acc, failure) => {
-        acc = acc + `
+    return parsedFailures.map((failure) => {
+        return `
         {
             "title": "${failure.name}",
             "short": false
         },
-        ${failErrors(failure.tests)}`
-        return acc;
-    }, '');
+        ${failErrors(failure.tests)}`;
+    }).join();
 }
 
 // Takes failMessages and create Error messages for each failures
 function failErrors(parsedErrors) {
-    return parsedErrors.reduce((acc, error, index) => {
-        acc = acc + `
+    return parsedErrors.map((error, index) => {
+        return `
         {
             "value": "*\`${index + 1}. ${error.name} - ${error.test}\`*",
             "short": false
         },
         {
             "value": "• ${cleanErrorMessage(error.message, messageSize)}",
-            "short": false,
-        },`;
-        return acc;
-    }, '');
+            "short": false
+        }`;
+    }).join();
 }
 
 function cleanErrorMessage(message, maxMessageSize) {
