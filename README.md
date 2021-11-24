@@ -34,6 +34,7 @@ or
  --reporter-slackmsg-collection '<collectionName> e.g test.json
  --reporter-slackmsg-environment '<environmentName> e.g env.json
  --reporter-slackmsg-reportingurl '<URL> e.g https://127.0.1/index.html
+  --reporter-slackmsg-limitFailures '<limitFailures>; e.g 5
 
 ```
 
@@ -59,3 +60,7 @@ Option to select channel or user receive the result
 
 **failuresChannel**
 Option to select channel or user to receive failures
+
+**limitFailures**
+Option to limit the amount failures shown in slack
+
