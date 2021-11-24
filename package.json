@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint index/js",
     "test": "jest",
-    "prepack": "npm run test"
+    "prepack": "npm run test",
+    "pack": "npm pack && npm install -g newman-reporter-slack-1.0.0.tgz"
   },
   "repository": {
     "type": "git",

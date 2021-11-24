@@ -50,7 +50,7 @@ describe('SlackNewmanReporter', () => {
         mockEmitter.emit('done', '', summary);
 
         expect(slackUtils.send).toHaveBeenCalled();
-        expect(slackUtils.slackMessage).toBeCalledWith(...["", {}, summary.run.failures, undefined, 100, "", "", failuresChannel]);
+        expect(slackUtils.slackMessage).toBeCalledWith(...['', {}, summary.run.failures, undefined, 100, '', '', failuresChannel, '']);
     });
 
     test('should start slack reporter given no errors for webhook', () => {
