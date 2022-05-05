@@ -130,6 +130,7 @@ describe('slackUtils', () => {
             // should include channel name if given for channel override
             expect(result).toContain(`"channel":"#general"`);
             // successful message 
+            expect(result).toContain(`Newman Test`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Total Tests:"},{"type":"mrkdwn","text":"4"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Passed:"},{"type":"mrkdwn","text":"3"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Failed:"},{"type":"mrkdwn","text":"0"}`);
@@ -158,6 +159,7 @@ describe('slackUtils', () => {
             const result = slackUtils.slackMessage(mockFailStats, mockTimings, mockFail, [], 100);
             const duration = prettyms(mockTimings.completed - mockTimings.started)
             
+            expect(result).toContain(`Newman Test`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Total Tests:"},{"type":"mrkdwn","text":"4"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Passed:"},{"type":"mrkdwn","text":"2"}`);
             expect(result).toContain(`{"type":"mrkdwn","text":"Test Failed:"},{"type":"mrkdwn","text":"2"}`);
@@ -176,7 +178,23 @@ describe('slackUtils', () => {
             expect(result).toContain(`1. AssertionError - Status code is 500`);
             // should truncate error message
             expect(result).toContain(`Expected - response to have status code 500 but got 200 test more than 100 characters blah blah blah...`);
-        }); 
+        });
+
+        test('should contain custom author name when success', () => {
+            const result = slackUtils.slackMessage(mockPassStats, mockTimings, [], mockExecutions, 100, '', '', '#general', '', null, 'John Doe');
+
+            // should include channel name if given for channel override
+            expect(result).toContain(`"channel":"#general"`);
+            // change author
+            expect(result).toContain(`John Doe`);
+        });
+
+        test('should contain custom author name when failed', () => {
+            const result = slackUtils.slackMessage(mockFailStats, mockTimings, mockFail, [], 100, '', '', '#general', '', null, 'John Doe');
+
+            // changed author
+            expect(result).toContain(`John Doe`);
+        });
     });
 
     afterEach(() => {

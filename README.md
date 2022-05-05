@@ -34,7 +34,8 @@ or
  --reporter-slackmsg-collection '<collectionName> e.g test.json
  --reporter-slackmsg-environment '<environmentName> e.g env.json
  --reporter-slackmsg-reportingurl '<URL> e.g https://127.0.1/index.html
-  --reporter-slackmsg-limitFailures '<limitFailures>; e.g 5
+ --reporter-slackmsg-limitFailures '<limitFailures>; e.g 5
+ --reporter-slackmsg-authorName '<authorName>; e.g "Newman Test"
 
 ```
 
@@ -64,3 +65,6 @@ Option to select channel or user to receive failures
 **limitFailures**
 Option to limit the amount failures shown in slack
 
+**authorName**
+
+Option to define a custom author name for Slack's message. If not provided, “Newman Test” will be used.
