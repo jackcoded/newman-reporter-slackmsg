@@ -50,7 +50,7 @@ describe('SlackNewmanReporter', () => {
         mockEmitter.emit('done', '', summary);
 
         expect(slackUtils.send).toHaveBeenCalled();
-        expect(slackUtils.slackMessage).toBeCalledWith(...['', {}, summary.run.failures, undefined, 100, '', '', failuresChannel, '', null]);
+        expect(slackUtils.slackMessage).toBeCalledWith(...['', {}, summary.run.failures, undefined, 100, '', '', failuresChannel, '', null, '']);
     });
 
     test('should start slack reporter given no errors for webhook', () => {
@@ -72,6 +72,17 @@ describe('SlackNewmanReporter', () => {
 
         expect(slackUtils.send).toHaveBeenCalled();
         expect(slackUtils.slackMessage).toHaveBeenCalled();
+        expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+
+    test('should start slack reporter given no errors for author name override', () => {
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+
+        slackNewmanReporter(mockEmitter, {webhookurl: 'test', authorName: 'John Doe'}, {});
+        mockEmitter.emit('done', '', summary);
+
+        expect(slackUtils.send).toHaveBeenCalled();
+        expect(slackUtils.slackMessage).toBeCalledWith(...['', {}, summary.run.failures, undefined, 100, '', '', '', '', null, 'John Doe']);
         expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
 

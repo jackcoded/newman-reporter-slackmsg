@@ -14,6 +14,7 @@ function SlackNewmanReporter(emitter, reporterOptions) {
     const reportingUrl = reporterOptions.reportingurl || '';
     let channel = reporterOptions.channel || '';
     let limitFailures = reporterOptions.limitFailures || null;
+    const authorName = reporterOptions.authorName || '';
 
 
     emitter.on('done', (error, summary) => {
@@ -27,7 +28,7 @@ function SlackNewmanReporter(emitter, reporterOptions) {
             channel = reporterOptions.failuresChannel;
         }
 
-        slackUtils.send(webhookUrl, slackUtils.slackMessage(run.stats, run.timings, run.failures, run.executions, messageSize, collection, environment, channel, reportingUrl, limitFailures), token);
+        slackUtils.send(webhookUrl, slackUtils.slackMessage(run.stats, run.timings, run.failures, run.executions, messageSize, collection, environment, channel, reportingUrl, limitFailures, authorName), token);
     });
 
     function missingReporterOptions(reporterOptions) {

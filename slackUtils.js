@@ -5,16 +5,17 @@ var jsonminify = require("jsonminify");
 let messageSize;
 
 // creates message for slack
-function slackMessage(stats, timings, failures, executions, maxMessageSize, collection, environment, channel, reportingUrl, limitFailures) {
+function slackMessage(stats, timings, failures, executions, maxMessageSize, collection, environment, channel, reportingUrl, limitFailures, authorName) {
     messageSize = maxMessageSize;
     let parsedFailures = parseFailures(failures);
     let skipCount = getSkipCount(executions);
+    let author = authorName || 'Newman Test';
     let failureMessage = `
     "attachments": [
         {
             "mrkdwn_in": ["text"],
             "color": "#FF0000",
-            "author_name": "Newman Tests",
+            "author_name": "${author}",
             "title": ":fire: Failures :fire:",
             "fields": [
                 ${limitFailures > 0 ? failMessage(parsedFailures.splice(0, limitFailures)) : failMessage(parsedFailures)}
@@ -28,7 +29,7 @@ function slackMessage(stats, timings, failures, executions, maxMessageSize, coll
         {
             "mrkdwn_in": ["text"],
             "color": "#008000",
-            "author_name": "Newman Tests",
+            "author_name": "${author}",
             "title": ":white_check_mark: All Passed :white_check_mark:",
             "footer": "Newman Test",
             "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
